@@ -8,7 +8,7 @@
 
 ## genDiff
 
-This is a cli utility that genegetes difference of two configuration files
+gendiff is a cli utility that genegetes difference of two configuration files
 
 ### How to use gendiff
 
