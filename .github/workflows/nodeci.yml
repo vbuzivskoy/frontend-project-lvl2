@@ -18,9 +18,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: Install, build
-      run: |
-        make install
-        make build
+        run: |
+          make install
+          make build
      - name: Run linter
         run: |
           make lint
@@ -31,4 +31,3 @@ jobs:
         with:
           coverageCommand: make test-coverage
           debug: true
-          
