@@ -21,10 +21,10 @@ jobs:
         run: |
           make install
           make build
-     - name: Run linter
+    - name: Run linter
         run: |
           make lint
-     - name: Test & publish code coverage
+    - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v2.4.0
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
