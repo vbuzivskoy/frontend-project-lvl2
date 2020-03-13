@@ -12,4 +12,4 @@ This is a cli utility that genegetes difference of two configuration files
 
 ### How to use gendiff
 
-[![asciicast](https://asciinema.org/a/HzN0kwGW31x6IeMPkadWq6Hbq.svg)](https://asciinema.org/a/HzN0kwGW31x6IeMPkadWq6Hbq)
+[![asciicast](https://asciinema.org/a/AA7kuRhHxKoCg3XLrMV4QyX6l.svg)](https://asciinema.org/a/AA7kuRhHxKoCg3XLrMV4QyX6l)
