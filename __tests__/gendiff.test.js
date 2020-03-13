@@ -1,8 +1,8 @@
 import genDiff from '../src';
 
 test('Plain JSON genDiff test', () => {
-  const pathToBeforeFile = '__tests__/before.json';
-  const pathToAfterFile = '__tests__/after.json';
+  const pathToBeforeFile = '__tests__/fixtures/before.json';
+  const pathToAfterFile = '__tests__/fixtures/after.json';
   const diff = `{
     host: hexlet.io
   + timeout: 20
