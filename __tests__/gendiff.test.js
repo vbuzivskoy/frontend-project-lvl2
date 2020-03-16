@@ -1,49 +1,65 @@
+import fs from 'fs';
 import genDiff from '../src';
 
-let diff;
+describe('gendiff tests with plain config files', () => {
+  let plainDiffFile;
+  let diffSet;
+  let makeDiffSet;
+  let getDistBetweenKeys;
 
-beforeAll(() => {
-  diff = `{
-    host: hexlet.io
-  + timeout: 20
-  - timeout: 50
-  - proxy: 123.234.53.22
-  + verbose: true
-  - follow: false
-}`;
-});
-test('Plain JSON genDiff test', () => {
-  const pathToBeforeFile = '__tests__/fixtures/before.json';
-  const pathToAfterFile = '__tests__/fixtures/after.json';
-  expect(new Set(genDiff(pathToBeforeFile, pathToAfterFile).split('\n'))).toEqual(new Set(diff.split('\n')));
-  expect((() => {
-    const diff = genDiff(pathToBeforeFile, pathToAfterFile).split('\n');
-    const plusTimeoutKeyIndex = diff.indexOf('  + timeout: 20');
-    const minusTimeoutKeyIndex = diff.indexOf('  - timeout: 50');
-    return Math.abs(plusTimeoutKeyIndex - minusTimeoutKeyIndex);
-  })()).toEqual(1);
+  beforeAll(() => {
+    plainDiffFile = fs.readFileSync('__tests__/fixtures/plain_diff.txt', 'utf8');
+    makeDiffSet = (rawDiff) => new Set(rawDiff.split('\n'));
+    getDistBetweenKeys = (rawDiff, key1diff, key2diff) => {
+      const splittedDiff = rawDiff.split('\n');
+      const plusTimeoutKeyIndex = splittedDiff.indexOf(key1diff);
+      const minusTimeoutKeyIndex = splittedDiff.indexOf(key2diff);
+      return Math.abs(plusTimeoutKeyIndex - minusTimeoutKeyIndex);
+    };
+    
+    diffSet = makeDiffSet(plainDiffFile);
+  });
+
+  test('Plain JSON file test', () => {
+    const pathToBeforeFile = '__tests__/fixtures/before_plain.json';
+    const pathToAfterFile = '__tests__/fixtures/after_plain.json';
+    expect(makeDiffSet(genDiff(pathToBeforeFile, pathToAfterFile))).toEqual(diffSet);
+    expect(
+      getDistBetweenKeys(
+        genDiff(pathToBeforeFile, pathToAfterFile),
+        '  + timeout: 20',
+        '  - timeout: 50'
+      )
+    ).toEqual(1);
+  });
+
+  test('Plain YAML file test', () => {
+    const pathToBeforeFile = '__tests__/fixtures/before_plain.yaml';
+    const pathToAfterFile = '__tests__/fixtures/after_plain.yaml';
+    expect(makeDiffSet(genDiff(pathToBeforeFile, pathToAfterFile))).toEqual(diffSet);
+    expect(
+      getDistBetweenKeys(
+        genDiff(pathToBeforeFile, pathToAfterFile),
+        '  + timeout: 20',
+        '  - timeout: 50'
+      )
+    ).toEqual(1);
+  });
+
+  test('Plain INI file test', () => {
+    const pathToBeforeFile = '__tests__/fixtures/before_plain.ini';
+    const pathToAfterFile = '__tests__/fixtures/after_plain.ini';
+    expect(makeDiffSet(genDiff(pathToBeforeFile, pathToAfterFile))).toEqual(diffSet);
+    expect(
+      getDistBetweenKeys(
+        genDiff(pathToBeforeFile, pathToAfterFile),
+        '  + timeout: 20',
+        '  - timeout: 50'
+      )
+    ).toEqual(1);
+  });
 });
 
-test('Plain YAML genDiff test', () => {
-  const pathToBeforeFile = '__tests__/fixtures/before.yaml';
-  const pathToAfterFile = '__tests__/fixtures/after.yaml';
-  expect(new Set(genDiff(pathToBeforeFile, pathToAfterFile).split('\n'))).toEqual(new Set(diff.split('\n')));
-  expect((() => {
-    const diff = genDiff(pathToBeforeFile, pathToAfterFile).split('\n');
-    const plusTimeoutKeyIndex = diff.indexOf('  + timeout: 20');
-    const minusTimeoutKeyIndex = diff.indexOf('  - timeout: 50');
-    return Math.abs(plusTimeoutKeyIndex - minusTimeoutKeyIndex);
-  })()).toEqual(1);
-});
-
-test('Plain INI genDiff test', () => {
-  const pathToBeforeFile = '__tests__/fixtures/before.ini';
-  const pathToAfterFile = '__tests__/fixtures/after.ini';
-  expect(new Set(genDiff(pathToBeforeFile, pathToAfterFile).split('\n'))).toEqual(new Set(diff.split('\n')));
-  expect((() => {
-    const diff = genDiff(pathToBeforeFile, pathToAfterFile).split('\n');
-    const plusTimeoutKeyIndex = diff.indexOf('  + timeout: 20');
-    const minusTimeoutKeyIndex = diff.indexOf('  - timeout: 50');
-    return Math.abs(plusTimeoutKeyIndex - minusTimeoutKeyIndex);
-  })()).toEqual(1);
+describe('gendiff tests with complex config files', () => {
+  
 });
