@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml'
+import ini from 'ini';
 
 const parseFile = (filepath) => {
   const file = fs.readFileSync(filepath, 'utf8');
@@ -12,6 +13,9 @@ const parseFile = (filepath) => {
       break;
     case '.yaml':
       parser = yaml.safeLoad;
+      break;
+    case '.ini':
+      parser = ini.decode;
       break;
     default:
       return null;
