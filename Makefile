@@ -4,7 +4,7 @@ install-deps:
 	npm ci
 
 start:
-	npx node dist/bin/gendiff.js
+	npx node dist/bin/gendiff.js -V
 
 build:
 	rm -rf dist
