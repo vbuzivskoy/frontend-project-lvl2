@@ -9,7 +9,16 @@
 ## genDiff
 
 gendiff is a cli utility that genegetes difference of two configuration files
+The utility supports JSON, YAML and INI input file formats.
 
-### How to use gendiff
+### How to use gendiff with JSON plain files
 
 [![asciicast](https://asciinema.org/a/AA7kuRhHxKoCg3XLrMV4QyX6l.svg)](https://asciinema.org/a/AA7kuRhHxKoCg3XLrMV4QyX6l)
+
+### How to use gendiff with YAML plain files
+
+[![asciicast](https://asciinema.org/a/DAyQD5yrXjTn9txLBjkcPoTc0.svg)](https://asciinema.org/a/DAyQD5yrXjTn9txLBjkcPoTc0)
+
+### How to use gendiff with INI plain files
+
+[![asciicast](https://asciinema.org/a/7ECPZ5f8QKZ98zYld8wY4j0Xq.svg)](https://asciinema.org/a/7ECPZ5f8QKZ98zYld8wY4j0Xq)
