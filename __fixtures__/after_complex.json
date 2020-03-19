@@ -3,7 +3,11 @@
     "follow": false,
     "setting1": "Value 1",
     "setting3": {
-      "key": "value"
+      "key": "value",
+      "key2": {
+        "nestedKey1": 123,
+        "nestedKey2": "456"
+      }
     },
     "setting4": "blah blah",
     "setting5": {
