@@ -6,6 +6,10 @@
       - setting3: true
       + setting3: {
             key: value
+            key2: {
+                nestedKey1: 123
+                nestedKey2: 456
+            }
         }
         setting6: {
             key: value
