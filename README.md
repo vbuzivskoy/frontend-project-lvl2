@@ -22,3 +22,7 @@ The utility supports JSON, YAML and INI input file formats.
 ### How to use gendiff with INI plain files
 
 [![asciicast](https://asciinema.org/a/7ECPZ5f8QKZ98zYld8wY4j0Xq.svg)](https://asciinema.org/a/7ECPZ5f8QKZ98zYld8wY4j0Xq)
+
+### How to use gendiff with complex multilevel config files
+
+[![asciicast](https://asciinema.org/a/gYhh1Q73xE0CtD2bS5NDM5hKe.svg)](https://asciinema.org/a/gYhh1Q73xE0CtD2bS5NDM5hKe)
