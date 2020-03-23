@@ -17,9 +17,9 @@ gendiff [options] <firstConfig> <secondConfig>
 ```
 
 Options:
-  ```-V```, ```--version```        output the version number
-  ```-f```, ```--format [type]```  output format (default: "complex")
-  ```-h```, ```--help```           output usage information
+  ```-V```, ```--version```        output the version number;
+  ```-f```, ```--format [type]```  output format (default: "complex");
+  ```-h```, ```--help```           output usage information.
 
 The utility supports next output formats:
 - complex;
