@@ -42,7 +42,8 @@ const stringifyValue = (deepness, indent, value) => {
   return iter(deepness, value);
 };
 
-const complexFormatter = (diff, indent = '  ') => {
+const complexFormatter = (diff) => {
+  const indent = '  ';
   const iter = (deepness, configValue) => {
     if (_.isObject(configValue)) {
       const configRecords = Object.entries(configValue);
