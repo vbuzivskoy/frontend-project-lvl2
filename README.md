@@ -11,6 +11,18 @@
 gendiff is a cli utility that genegetes difference of two configuration files
 The utility supports JSON, YAML and INI input file formats.
 
+Usage: gendiff gendiff [options] <firstConfig> <secondConfig>
+
+Options:
+  -V, --version        output the version number
+  -f, --format [type]  output format (default: "complex")
+  -h, --help           output usage information
+
+The utility suporrts next output formats:
+- complex;
+- plain;
+- json.
+
 ### How to use gendiff with different config file formats
 
 [![asciicast](https://asciinema.org/a/gYhh1Q73xE0CtD2bS5NDM5hKe.svg)](https://asciinema.org/a/gYhh1Q73xE0CtD2bS5NDM5hKe)
