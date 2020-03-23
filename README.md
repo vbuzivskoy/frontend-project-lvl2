@@ -18,7 +18,7 @@ Options:
   -f, --format [type]  output format (default: "complex")
   -h, --help           output usage information
 
-The utility suporrts next output formats:
+The utility supports next output formats:
 - complex;
 - plain;
 - json.
