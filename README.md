@@ -11,22 +11,10 @@
 gendiff is a cli utility that genegetes difference of two configuration files
 The utility supports JSON, YAML and INI input file formats.
 
-### How to use gendiff with JSON plain files
-
-[![asciicast](https://asciinema.org/a/AA7kuRhHxKoCg3XLrMV4QyX6l.svg)](https://asciinema.org/a/AA7kuRhHxKoCg3XLrMV4QyX6l)
-
-### How to use gendiff with YAML plain files
-
-[![asciicast](https://asciinema.org/a/DAyQD5yrXjTn9txLBjkcPoTc0.svg)](https://asciinema.org/a/DAyQD5yrXjTn9txLBjkcPoTc0)
-
-### How to use gendiff with INI plain files
-
-[![asciicast](https://asciinema.org/a/7ECPZ5f8QKZ98zYld8wY4j0Xq.svg)](https://asciinema.org/a/7ECPZ5f8QKZ98zYld8wY4j0Xq)
-
-### How to use gendiff with complex multilevel config files
+### How to use gendiff with different config file formats
 
 [![asciicast](https://asciinema.org/a/gYhh1Q73xE0CtD2bS5NDM5hKe.svg)](https://asciinema.org/a/gYhh1Q73xE0CtD2bS5NDM5hKe)
 
 ### How to use gendiff with different output formats
 
-[![asciicast](https://asciinema.org/a/uSGxgSeCUbMIwnDf0GIOXCd3B.svg)](https://asciinema.org/a/uSGxgSeCUbMIwnDf0GIOXCd3B)
+[![asciicast](https://asciinema.org/a/oAn1F1DmgVwdwHUcmkNU9AOnY.svg)](https://asciinema.org/a/oAn1F1DmgVwdwHUcmkNU9AOnY)
