@@ -6,7 +6,7 @@
       "key": "value",
       "key2": {
         "nestedKey1": 123,
-        "nestedKey2": "456"
+        "nestedKey2": true
       }
     },
     "setting4": "blah blah",
