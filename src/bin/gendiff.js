@@ -12,8 +12,8 @@ program
   .arguments('<firstConfig> <secondConfig>')
   .option('-f, --format [type]', 'output format', 'complex')
   .action((beforeConfig, afterConfig, cmdObj) => {
-    const fromat = cmdObj.format;
-    console.log(genDiff(beforeConfig, afterConfig, fromat));
+    const format = cmdObj.format;
+    console.log(genDiff(beforeConfig, afterConfig, format));
   });
 
 program.parse(process.argv);
