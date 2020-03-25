@@ -8,7 +8,7 @@
 
 ## genDiff
 
-gendiff is a cli utility that genegetes difference of two configuration files
+gendiff is a cli utility that genegetes difference of two configuration files.\
 The utility supports JSON, YAML and INI input file formats.
 
 Usage:
