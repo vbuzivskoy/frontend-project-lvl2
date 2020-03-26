@@ -1,6 +1,9 @@
 {
   "common": {
     "=": {
+      "follow": {
+        "+": false
+      },
       "setting1": {
         "=": "Value 1"
       },
@@ -8,13 +11,21 @@
         "-": 200
       },
       "setting3": {
-        "-": true,
         "+": {
           "key": "value",
           "key2": {
             "nestedKey1": 123,
             "nestedKey2": true
           }
+        },
+        "-": true
+      },
+      "setting4": {
+        "+": "blah blah"
+      },
+      "setting5": {
+        "+": {
+          "key5": "value5"
         }
       },
       "setting6": {
@@ -26,34 +37,23 @@
             "+": "vops"
           }
         }
-      },
-      "follow": {
-        "+": false
-      },
-      "setting4": {
-        "+": "blah blah"
-      },
-      "setting5": {
-        "+": {
-          "key5": "value5"
-        }
       }
     }
   },
   "group1": {
     "=": {
       "baz": {
-        "-": "bas",
-        "+": "bars"
+        "+": "bars",
+        "-": "bas"
       },
       "foo": {
         "=": "bar"
       },
       "nest": {
+        "+": "str",
         "-": {
           "key": "value"
-        },
-        "+": "str"
+        }
       }
     }
   },
