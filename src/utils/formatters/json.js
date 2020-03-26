@@ -1,10 +1,11 @@
 import _ from 'lodash';
+import getSortedEntities from '../sortentities';
 
 const jsonFormatter = (diff) => {
   const indent = '  ';
   const iter = (deepness, configValue) => {
     if (_.isObject(configValue)) {
-      const diffRecords = Object.entries(configValue);
+      const diffRecords = getSortedEntities(configValue);
       const stringifiedDiffRecords = diffRecords
         .reduce((configDiffAccum, [currentCunfigKey, currentDiffValue]) => {
           const stringifiedCurrentDiffValue = iter(deepness + 1, currentDiffValue);

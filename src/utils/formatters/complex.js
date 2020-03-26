@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import getSortedEntities from '../sortentities';
 
 const getDiffSign = (diffSign) => {
   let sign;
@@ -21,7 +22,7 @@ const getDiffSign = (diffSign) => {
 const stringifyValue = (deepness, indent, value) => {
   const iter = (currentDeepness, currentValue) => {
     if (_.isObject(currentValue)) {
-      const configRecords = Object.entries(currentValue);
+      const configRecords = getSortedEntities(currentValue);
       const stringifiedConfigRecords = configRecords
         .reduce((configRecordsAccum, [currentConfigKey, currentConfigValue]) => {
           const stringifiedCurrentConfigValue = iter(currentDeepness + 2, currentConfigValue);
@@ -46,10 +47,10 @@ const complexFormatter = (diff) => {
   const indent = '  ';
   const iter = (deepness, configValue) => {
     if (_.isObject(configValue)) {
-      const configRecords = Object.entries(configValue);
+      const configRecords = getSortedEntities(configValue);
       const stringifiedDiffRecords = configRecords
         .reduce((configRecordAccum, [currentConfigKey, currentConfigRecordDiffs]) => {
-          const currentConfigRecordDiffsEntities = Object.entries(currentConfigRecordDiffs);
+          const currentConfigRecordDiffsEntities = getSortedEntities(currentConfigRecordDiffs);
           const stringifiedCurrentConfigRecordDiffs = currentConfigRecordDiffsEntities
             .reduce((configDiffAccum, [diffSign, currentConfigValue]) => {
               const sign = getDiffSign(diffSign);

@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import getSortedEntities from '../sortentities';
 
 const stringifyValue = (value) => {
   return _.isObject(value) ? '[complex value]' : `'${value}'`;
@@ -7,7 +8,7 @@ const stringifyValue = (value) => {
 const plainFormatter = (diff) => {
   const iter = (previousFullConfigKey, configValue) => {
     if (_.isObject(configValue)) {
-      const configRecords = Object.entries(configValue);
+      const configRecords = getSortedEntities(configValue);
       const stringifiedDiffRecords = configRecords
         .reduce((configDiffAccum, [currentConfigKey, currentConfigRecordDiffs]) => {
           const currentFullConfigKey = `${previousFullConfigKey}${currentConfigKey}`;
