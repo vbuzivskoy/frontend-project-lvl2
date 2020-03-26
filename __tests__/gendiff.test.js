@@ -1,16 +1,14 @@
+import path from 'path';
 import fs from 'fs';
 import genDiff from '../src';
 
 describe('gendiff tests', () => {
-  let getDistBetweenKeys;
+  let getFixturePath;
+  let readFixture;
 
   beforeAll(() => {
-    getDistBetweenKeys = (rawDiff, key1diff, key2diff) => {
-      const splittedDiff = rawDiff.split('\n');
-      const key1Index = splittedDiff.indexOf(key1diff);
-      const key2Index = splittedDiff.indexOf(key2diff);
-      return Math.abs(key1Index - key2Index);
-    };
+    getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
+    readFixture = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
   });
 
   describe('Complex output format tests', () => {
@@ -18,62 +16,26 @@ describe('gendiff tests', () => {
     let format;
 
     beforeAll(() => {
-      complexDiffFile = fs.readFileSync('__fixtures__/complex_diff.txt', 'utf8');
+      complexDiffFile = readFixture('complex_diff.txt');
       format = 'complex';
     });
 
     test('JSON file content test', () => {
-      const pathToBeforeFile = '__fixtures__/before_complex.json';
-      const pathToAfterFile = '__fixtures__/after_complex.json';
+      const pathToBeforeFile = getFixturePath('before_complex.json');
+      const pathToAfterFile = getFixturePath('after_complex.json');
       expect(genDiff(pathToBeforeFile, pathToAfterFile, format)).toEqual(complexDiffFile);
-    });
-
-    test('JSON file changed value test (2 recordes must be beside)', () => {
-      const pathToBeforeFile = '__fixtures__/before_complex.json';
-      const pathToAfterFile = '__fixtures__/after_complex.json';
-      expect(
-        getDistBetweenKeys(
-          genDiff(pathToBeforeFile, pathToAfterFile, format),
-          '      + baz: bars',
-          '      - baz: bas'
-        )
-      ).toEqual(1);
     });
 
     test('YAML file content test', () => {
-      const pathToBeforeFile = '__fixtures__/before_complex.yaml';
-      const pathToAfterFile = '__fixtures__/after_complex.yaml';
+      const pathToBeforeFile = getFixturePath('before_complex.yaml');
+      const pathToAfterFile = getFixturePath('after_complex.yaml');
       expect(genDiff(pathToBeforeFile, pathToAfterFile, format)).toEqual(complexDiffFile);
-    });
-
-    test('YAML file changed value test (2 recordes must be beside)', () => {
-      const pathToBeforeFile = '__fixtures__/before_complex.yaml';
-      const pathToAfterFile = '__fixtures__/after_complex.yaml';
-      expect(
-        getDistBetweenKeys(
-          genDiff(pathToBeforeFile, pathToAfterFile, format),
-          '      + baz: bars',
-          '      - baz: bas'
-        )
-      ).toEqual(1);
     });
 
     test('INI file content test', () => {
-      const pathToBeforeFile = '__fixtures__/before_complex.ini';
-      const pathToAfterFile = '__fixtures__/after_complex.ini';
+      const pathToBeforeFile = getFixturePath('before_complex.ini');
+      const pathToAfterFile = getFixturePath('after_complex.ini');
       expect(genDiff(pathToBeforeFile, pathToAfterFile, format)).toEqual(complexDiffFile);
-    });
-
-    test('INI file changed value test (2 recordes must be beside)', () => {
-      const pathToBeforeFile = '__fixtures__/before_complex.ini';
-      const pathToAfterFile = '__fixtures__/after_complex.ini';
-      expect(
-        getDistBetweenKeys(
-          genDiff(pathToBeforeFile, pathToAfterFile, format),
-          '      + baz: bars',
-          '      - baz: bas'
-        )
-      ).toEqual(1);
     });
   });
 
@@ -82,25 +44,25 @@ describe('gendiff tests', () => {
     let format;
 
     beforeAll(() => {
-      plainDiffFile = fs.readFileSync('__fixtures__/plain_diff.txt', 'utf8');
+      plainDiffFile = readFixture('plain_diff.txt');
       format = 'plain';
     });
 
     test('JSON file content test', () => {
-      const pathToBeforeFile = '__fixtures__/before_complex.json';
-      const pathToAfterFile = '__fixtures__/after_complex.json';
+      const pathToBeforeFile = getFixturePath('before_complex.json');
+      const pathToAfterFile = getFixturePath('after_complex.json');
       expect(genDiff(pathToBeforeFile, pathToAfterFile, format)).toEqual(plainDiffFile);
     });
 
     test('YAML file content test', () => {
-      const pathToBeforeFile = '__fixtures__/before_complex.yaml';
-      const pathToAfterFile = '__fixtures__/after_complex.yaml';
+      const pathToBeforeFile = getFixturePath('before_complex.yaml');
+      const pathToAfterFile = getFixturePath('after_complex.yaml');
       expect(genDiff(pathToBeforeFile, pathToAfterFile, format)).toEqual(plainDiffFile);
     });
 
     test('INI file content test', () => {
-      const pathToBeforeFile = '__fixtures__/before_complex.ini';
-      const pathToAfterFile = '__fixtures__/after_complex.ini';
+      const pathToBeforeFile = getFixturePath('before_complex.ini');
+      const pathToAfterFile = getFixturePath('after_complex.ini');
       expect(genDiff(pathToBeforeFile, pathToAfterFile, format)).toEqual(plainDiffFile);
     });
   });
@@ -110,25 +72,25 @@ describe('gendiff tests', () => {
     let format;
 
     beforeAll(() => {
-      jsonDiffFile = fs.readFileSync('__fixtures__/diff.json', 'utf8');
+      jsonDiffFile = readFixture('diff.json');
       format = 'json';
     });
 
     test('JSON file content test', () => {
-      const pathToBeforeFile = '__fixtures__/before_complex.json';
-      const pathToAfterFile = '__fixtures__/after_complex.json';
+      const pathToBeforeFile = getFixturePath('before_complex.json');
+      const pathToAfterFile = getFixturePath('after_complex.json');
       expect(genDiff(pathToBeforeFile, pathToAfterFile, format)).toEqual(jsonDiffFile);
     });
 
     test('YAML file content test', () => {
-      const pathToBeforeFile = '__fixtures__/before_complex.yaml';
-      const pathToAfterFile = '__fixtures__/after_complex.yaml';
+      const pathToBeforeFile = getFixturePath('before_complex.yaml');
+      const pathToAfterFile = getFixturePath('after_complex.yaml');
       expect(genDiff(pathToBeforeFile, pathToAfterFile, format)).toEqual(jsonDiffFile);
     });
 
     test('INI file content test', () => {
-      const pathToBeforeFile = '__fixtures__/before_complex.ini';
-      const pathToAfterFile = '__fixtures__/after_complex.ini';
+      const pathToBeforeFile = getFixturePath('before_complex.ini');
+      const pathToAfterFile = getFixturePath('after_complex.ini');
       expect(genDiff(pathToBeforeFile, pathToAfterFile, format)).toEqual(jsonDiffFile);
     });
   });
