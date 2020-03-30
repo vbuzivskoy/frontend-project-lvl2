@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import parser from './utils/parser';
-import getFormatter from './utils/formatter';
+import parser from './parser';
+import getFormatter from './formatter';
 
 const genDiff = (pathToBeforeFile, pathToAfterFile, format) => {
   const formatter = getFormatter(format);
