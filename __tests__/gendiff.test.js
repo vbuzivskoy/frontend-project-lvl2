@@ -6,11 +6,7 @@ describe('gendiff tests', () => {
   let getFixturePath;
   let readFixture;
   let expectedDiffFile;
-  const outputFormatFiles = [
-    ['complex', 'complex_diff.txt'],
-    ['plain', 'plain_diff.txt'],
-    ['json', 'diff.json']
-  ];
+  let format;
   const inputFilesTable = [
     ['JSON', 'before_complex.json', 'after_complex.json'],
     ['YAML', 'before_complex.yaml', 'after_complex.yaml'],
@@ -22,17 +18,42 @@ describe('gendiff tests', () => {
     readFixture = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
   });
 
-  outputFormatFiles.forEach(([format, expectedDiffFileName]) => {
-    describe(`${format} output format tests`, () => {
-        beforeAll(() => {
-          expectedDiffFile = readFixture(expectedDiffFileName);
-        });
-    
-        test.each(inputFilesTable)('%s file content test', (filesFormat, beforeFileName, afterFileName) => {
-          const pathToBeforeFile = getFixturePath(beforeFileName);
-          const pathToAfterFile = getFixturePath(afterFileName);
-          expect(genDiff(pathToBeforeFile, pathToAfterFile, format)).toEqual(expectedDiffFile);
-        });
-      });
+  describe(`Complex output format tests`, () => {
+    beforeAll(() => {
+      format = 'complex';
+      expectedDiffFile = readFixture('complex_diff.txt');
+    });
+
+    test.each(inputFilesTable)('%s file content test', (filesFormat, beforeFileName, afterFileName) => {
+      const pathToBeforeFile = getFixturePath(beforeFileName);
+      const pathToAfterFile = getFixturePath(afterFileName);
+      expect(genDiff(pathToBeforeFile, pathToAfterFile, format)).toEqual(expectedDiffFile);
+    });
+  });
+
+  describe(`Plain output format tests`, () => {
+    beforeAll(() => {
+      format = 'plain';
+      expectedDiffFile = readFixture('plain_diff.txt');
+    });
+
+    test.each(inputFilesTable)('%s file content test', (filesFormat, beforeFileName, afterFileName) => {
+      const pathToBeforeFile = getFixturePath(beforeFileName);
+      const pathToAfterFile = getFixturePath(afterFileName);
+      expect(genDiff(pathToBeforeFile, pathToAfterFile, format)).toEqual(expectedDiffFile);
+    });
+  });
+
+  describe(`JSON output format tests`, () => {
+    beforeAll(() => {
+      format = 'json';
+      expectedDiffFile = readFixture('diff.json');
+    });
+
+    test.each(inputFilesTable)('%s file content test', (filesFormat, beforeFileName, afterFileName) => {
+      const pathToBeforeFile = getFixturePath(beforeFileName);
+      const pathToAfterFile = getFixturePath(afterFileName);
+      expect(JSON.parse(genDiff(pathToBeforeFile, pathToAfterFile, format))).toEqual(JSON.parse(expectedDiffFile));
+    });
   });
 });
