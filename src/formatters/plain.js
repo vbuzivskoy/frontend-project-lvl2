@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import getSortedEntities from '../sortentities';
 
 const stringifyValue = (value) => {
   return _.isObject(value) ? '[complex value]' : `'${value}'`;
@@ -7,26 +6,26 @@ const stringifyValue = (value) => {
 
 const plainFormatter = (diff) => {
   const iter = (previousFullConfigKey, configValue) => {
-    if (_.isObject(configValue)) {
-      const configRecords = getSortedEntities(configValue);
-      const stringifiedDiffRecords = configRecords
-        .reduce((configDiffAccum, [currentConfigKey, currentConfigRecordDiffs]) => {
-          const currentFullConfigKey = `${previousFullConfigKey}${currentConfigKey}`;
+    if (_.isArray(configValue)) {
+      const stringifiedDiffRecords = configValue
+        .reduce((configDiffAccum, node) => {
+          const { key, operator, value, valueBefore, valueAfter } = node;
+          const currentFullConfigKey = `${previousFullConfigKey}${key}`;
           let currentStringifiedDiffRecords;
-          if (_.has(currentConfigRecordDiffs, '=')) {
-            currentStringifiedDiffRecords = iter(`${currentFullConfigKey}.`, currentConfigRecordDiffs['=']);
-          } else if (_.has(currentConfigRecordDiffs, '-') && _.has(currentConfigRecordDiffs, '+')) {
-            const stringifiedOldValue = stringifyValue(currentConfigRecordDiffs['-']);
-            const stringifiedNewValue = stringifyValue(currentConfigRecordDiffs['+']);
+          if (operator === 'equal') {
+            currentStringifiedDiffRecords = iter(`${currentFullConfigKey}.`, value);
+          } else if (operator === 'change') {
+            const stringifiedValueBefore = stringifyValue(valueBefore);
+            const stringifiedValueAfter = stringifyValue(valueAfter);
             currentStringifiedDiffRecords =
-              [`Property '${currentFullConfigKey}' was changed from ${stringifiedOldValue} to ${stringifiedNewValue}`];
-          } else if (_.has(currentConfigRecordDiffs, '-')) {
+              [`Property '${currentFullConfigKey}' was changed from ${stringifiedValueBefore} to ${stringifiedValueAfter}`];
+          } else if (operator === 'remove') {
             currentStringifiedDiffRecords =
               [`Property '${currentFullConfigKey}' was deleted`];
           } else {
-            const stringifiedNewValue = stringifyValue(currentConfigRecordDiffs['+']);
+            const stringifiedValue = stringifyValue(value);
             currentStringifiedDiffRecords =
-              [`Property '${currentFullConfigKey}' was added with value: ${stringifiedNewValue}`];
+              [`Property '${currentFullConfigKey}' was added with value: ${stringifiedValue}`];
           }
           return [
             ...configDiffAccum,

@@ -1,16 +1,16 @@
 import _ from 'lodash';
 import getSortedEntities from '../sortentities';
 
-const getDiffSign = (diffSign) => {
+const getDiffSign = (operation) => {
   let sign;
-  switch (diffSign) {
-    case '+':
+  switch (operation) {
+    case 'add':
       sign = '+';
       break;
-    case '-':
+    case 'remove':
       sign = '-';
       break;
-    case '=':
+    case 'equal':
       sign = '';
       break;
     default:
@@ -19,7 +19,7 @@ const getDiffSign = (diffSign) => {
   return sign;
 };
 
-const stringifyValue = (deepness, indent, value) => {
+const stringifyObjectValue = (deepness, indent, value) => {
   const iter = (currentDeepness, currentValue) => {
     if (_.isObject(currentValue)) {
       const configRecords = getSortedEntities(currentValue);
@@ -46,29 +46,27 @@ const stringifyValue = (deepness, indent, value) => {
 const complexFormatter = (diff) => {
   const indent = '  ';
   const iter = (deepness, configValue) => {
-    if (_.isObject(configValue)) {
-      const configRecords = getSortedEntities(configValue);
-      const stringifiedDiffRecords = configRecords
-        .reduce((configRecordAccum, [currentConfigKey, currentConfigRecordDiffs]) => {
-          const currentConfigRecordDiffsEntities = getSortedEntities(currentConfigRecordDiffs);
-          const stringifiedCurrentConfigRecordDiffs = currentConfigRecordDiffsEntities
-            .reduce((configDiffAccum, [diffSign, currentConfigValue]) => {
-              const sign = getDiffSign(diffSign);
-              let stringifiedCurrentConfigValue;
-              if (diffSign === '=') {
-                stringifiedCurrentConfigValue = iter(deepness + 2, currentConfigValue);
-              } else {
-                stringifiedCurrentConfigValue = stringifyValue(deepness + 2, indent, currentConfigValue);
-              }
-              return [
-                ...configDiffAccum,
-                `${indent.repeat(deepness + 1)}${sign.padEnd(2)}${currentConfigKey}: ${_.head(stringifiedCurrentConfigValue)}`,
-                ...stringifiedCurrentConfigValue.slice(1)
-              ];
-            }, []);
+    if (_.isArray(configValue)) {
+      const stringifiedDiffRecords = configValue
+        .reduce((configDiffAccum, node) => {
+          const { key, operator, value, valueBefore, valueAfter } = node;
+          if (operator === 'change') {
+            const stringifiedValueBefore = iter(deepness + 2, valueBefore);
+            const stringifiedValueAfter = iter(deepness + 2, valueAfter);
+            return [
+              ...configDiffAccum,
+              `${indent.repeat(deepness + 1)}- ${key}: ${_.head(stringifiedValueBefore)}`,
+              ...stringifiedValueBefore.slice(1),
+              `${indent.repeat(deepness + 1)}+ ${key}: ${_.head(stringifiedValueAfter)}`,
+              ...stringifiedValueAfter.slice(1)
+            ];
+          }
+          const stringifiedValue = iter(deepness + 2, value);
+          const sign = getDiffSign(operator);
           return [
-            ...configRecordAccum,
-            ...stringifiedCurrentConfigRecordDiffs
+            ...configDiffAccum,
+            `${indent.repeat(deepness + 1)}${sign.padEnd(2)}${key}: ${_.head(stringifiedValue)}`,
+            ...stringifiedValue.slice(1)
           ];
         }, []);
       return [
@@ -76,6 +74,9 @@ const complexFormatter = (diff) => {
         ...stringifiedDiffRecords,
         `${indent.repeat(deepness)}}`
       ]
+    }
+    if (_.isObject) {
+      return stringifyObjectValue(deepness, indent, configValue);
     }
     return [configValue];
   };
