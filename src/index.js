@@ -1,6 +1,16 @@
+import fs from 'fs';
+import path from 'path';
 import _ from 'lodash';
 import parser from './parser';
 import getFormatter from './formatter';
+
+const readFile = (filePath) => fs.readFileSync(filePath, 'utf8');
+const getFileExtension = (filePath) => path.extname(filePath);
+const getParsedFile = (filePath) => {
+  const fileContent = readFile(filePath);
+  const fileExtension = getFileExtension(filePath);
+  return parser(fileContent, fileExtension);
+};
 
 const createNode = (key, operator, values) => {
   const node = { key, operator };
@@ -22,10 +32,10 @@ const sortNodes = ({key: aKey}, {key: bKey}) => {
   return 0;
 }
 
-const genDiff = (pathToBeforeFile, pathToAfterFile, format) => {
-  const formatter = getFormatter(format);
-  const configBefore = parser(pathToBeforeFile);
-  const configAfter = parser(pathToAfterFile);
+const genDiff = (beforeFilePath, afterFilePath, format) => {
+  const formatter = getFormatter(format); 
+  const configBefore = getParsedFile(beforeFilePath);
+  const configAfter = getParsedFile(afterFilePath);
 
   const iter = (valueBefore, valueAfter) => {
     const keys = _.uniq(_.concat(Object.keys(valueBefore), Object.keys(valueAfter)));

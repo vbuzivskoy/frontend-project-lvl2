@@ -1,6 +1,4 @@
-import fs from 'fs';
 import _ from 'lodash';
-import path from 'path';
 import yaml from 'js-yaml'
 import ini from 'ini';
 
@@ -22,9 +20,7 @@ const iniParser = (iniFileContent) => {
   return iter(decodedIni);
 };
 
-const parseFile = (filepath) => {
-  const file = fs.readFileSync(filepath, 'utf8');
-  const ext = path.extname(filepath);
+const parseFile = (file, ext) => {
   let parser;
   switch (ext) {
     case '.json':
