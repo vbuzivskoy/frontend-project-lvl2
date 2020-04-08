@@ -27,10 +27,10 @@ describe('gendiff tests', () => {
       const firstConfigFilePath = getFixturePath(`firstConfig.${filesFormat}`);
       const secondConfigFilePath = getFixturePath(`secondConfig.${filesFormat}`);
       const recievedDiff = genDiff(firstConfigFilePath, secondConfigFilePath, ouputFormatType);
-      const recievedDiffToTest = normalizeDiff(recievedDiff, ouputFormatType);
+      const normalizedRecievedDiff = normalizeDiff(recievedDiff, ouputFormatType);
       const expectedDiffFilename = `${ouputFormatType}_diff.txt`;
       const expectedDiff = readFixture(expectedDiffFilename);
-      const expectedDiffToTest = normalizeDiff(expectedDiff, ouputFormatType);
-      expect(recievedDiffToTest).toEqual(expectedDiffToTest);
+      const normalizedExpected = normalizeDiff(expectedDiff, ouputFormatType);
+      expect(normalizedRecievedDiff).toEqual(normalizedExpected);
   });
 });
