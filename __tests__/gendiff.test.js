@@ -4,7 +4,7 @@ import genDiff from '../src';
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 const readFixture = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
-const getDiffToTest = (diff, ouputFormatType) => (
+const normalizeDiff = (diff, ouputFormatType) => (
   ouputFormatType === 'json' ? JSON.parse(diff) : diff
 );
 
@@ -27,10 +27,10 @@ describe('gendiff tests', () => {
       const firstConfigFilePath = getFixturePath(`firstConfig.${filesFormat}`);
       const secondConfigFilePath = getFixturePath(`secondConfig.${filesFormat}`);
       const recievedDiff = genDiff(firstConfigFilePath, secondConfigFilePath, ouputFormatType);
-      const recievedDiffToTest = getDiffToTest(recievedDiff, ouputFormatType);
+      const recievedDiffToTest = normalizeDiff(recievedDiff, ouputFormatType);
       const expectedDiffFilename = `${ouputFormatType}_diff.txt`;
       const expectedDiff = readFixture(expectedDiffFilename);
-      const expectedDiffToTest = getDiffToTest(expectedDiff, ouputFormatType);
+      const expectedDiffToTest = normalizeDiff(expectedDiff, ouputFormatType);
       expect(recievedDiffToTest).toEqual(expectedDiffToTest);
   });
 });
