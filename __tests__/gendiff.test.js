@@ -30,7 +30,7 @@ describe('gendiff tests', () => {
       const normalizedRecievedDiff = normalizeDiff(recievedDiff, ouputFormatType);
       const expectedDiffFilename = `${ouputFormatType}_diff.txt`;
       const expectedDiff = readFixture(expectedDiffFilename);
-      const normalizedExpected = normalizeDiff(expectedDiff, ouputFormatType);
-      expect(normalizedRecievedDiff).toEqual(normalizedExpected);
+      const normalizedExpectedDiff = normalizeDiff(expectedDiff, ouputFormatType);
+      expect(normalizedRecievedDiff).toEqual(normalizedExpectedDiff);
   });
 });
