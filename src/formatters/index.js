@@ -1,23 +1,24 @@
-import plainFormatter from './formatters/plain';
-import complexFormatter from './formatters/complex';
-import jsonFormatter from './formatters/json';
+import plainFormatter from './plain';
+import complexFormatter from './complex';
+import jsonFormatter from './json';
 
-const getFormatter = (format) => {
-  let formatter;
-  switch (format) {
+
+const getFormatter = (formatType) => {
+  switch (formatType) {
     case 'plain':
-      formatter = plainFormatter;
-      break;
+      return plainFormatter;
     case 'complex':
-      formatter = complexFormatter;
-      break;
+      return complexFormatter;
     case 'json':
-      formatter = jsonFormatter;
-      break;
+      return jsonFormatter;
     default:
-      formatter = null;
+      throw new Error(`No formatter for '${formatType}' format type!`)
   }
-  return formatter;
 };
 
-export default getFormatter;
+const formatDiff = (diff, formatType) => {
+  const format = getFormatter(formatType);
+  return format(diff);
+};
+
+export default formatDiff;

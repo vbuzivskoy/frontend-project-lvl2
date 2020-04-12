@@ -20,22 +20,22 @@ const iniParser = (iniFileContent) => {
   return iter(decodedIni);
 };
 
-const parseFile = (file, ext) => {
-  let parser;
-  switch (ext) {
+const getParser = (extension) => {
+  switch (extension) {
     case '.json':
-      parser = JSON.parse;
-      break;
+      return JSON.parse;
     case '.yaml':
-      parser = yaml.safeLoad;
-      break;
+      return yaml.safeLoad;
     case '.ini':
-      parser = iniParser;
-      break;
+      return iniParser;
     default:
-      return null;
+      throw new Error(`No parser for '${extension}' file type!`);
   }
-  return parser(file);
 };
 
-export default parseFile;
+const parseConfig = (config, extension) => {
+  const parse = getParser(extension);
+  return parse(config);
+};
+
+export default parseConfig;

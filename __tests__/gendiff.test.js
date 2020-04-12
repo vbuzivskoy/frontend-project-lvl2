@@ -4,33 +4,28 @@ import genDiff from '../src';
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 const readFixture = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
-const normalizeDiff = (diff, ouputFormatType) => (
-  ouputFormatType === 'json' ? JSON.parse(diff) : diff
-);
 
 describe('gendiff tests', () => {
-  const testData = [
-    ['json', 'complex'],
-    ['yaml', 'complex'],
-    ['ini', 'complex'],
-    ['json', 'plain'],
-    ['yaml', 'plain'],
-    ['ini', 'plain'],
-    ['json', 'json'],
-    ['yaml', 'json'],
-    ['ini', 'json']
-  ];
+  const inputFilesEntensions = ['json', 'yaml', 'ini'];
 
-  test.each(testData)(
-    '%s file content test with %s output format type',
-    (filesFormat, ouputFormatType) => {
-      const firstConfigFilePath = getFixturePath(`firstConfig.${filesFormat}`);
-      const secondConfigFilePath = getFixturePath(`secondConfig.${filesFormat}`);
-      const recievedDiff = genDiff(firstConfigFilePath, secondConfigFilePath, ouputFormatType);
-      const normalizedRecievedDiff = normalizeDiff(recievedDiff, ouputFormatType);
-      const expectedDiffFilename = `${ouputFormatType}_diff.txt`;
-      const expectedDiff = readFixture(expectedDiffFilename);
-      const normalizedExpectedDiff = normalizeDiff(expectedDiff, ouputFormatType);
-      expect(normalizedRecievedDiff).toEqual(normalizedExpectedDiff);
+  test.each(inputFilesEntensions)(
+    '%s file content tests',
+    (inputFilesEntension) => {
+      const firstConfigFilePath = getFixturePath(`firstConfig.${inputFilesEntension}`);
+      const secondConfigFilePath = getFixturePath(`secondConfig.${inputFilesEntension}`);
+
+      const recievedComplexDiff = genDiff(firstConfigFilePath, secondConfigFilePath, 'complex');
+      const expectedComplexDiff = readFixture(`complex_diff.txt`);
+      expect(recievedComplexDiff).toEqual(expectedComplexDiff);
+
+      const recievedPlainxDiff = genDiff(firstConfigFilePath, secondConfigFilePath, 'plain');
+      const expectedPlainDiff = readFixture(`plain_diff.txt`);
+      expect(recievedPlainxDiff).toEqual(expectedPlainDiff);
+
+      const recievedJSONDiff = genDiff(firstConfigFilePath, secondConfigFilePath, 'json');
+      const parsedRecievedJSONDiff = JSON.parse(recievedJSONDiff);
+      const expectedJSONDiff = readFixture(`json_diff.txt`);
+      const parsedExpectedJSONDiff = JSON.parse(expectedJSONDiff);
+      expect(parsedRecievedJSONDiff).toEqual(parsedExpectedJSONDiff);
   });
 });

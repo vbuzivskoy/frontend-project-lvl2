@@ -12,7 +12,7 @@ const plainFormatter = (diff) => {
           const { key, operator, value, valueBefore, valueAfter } = node;
           const currentFullConfigKey = `${previousFullConfigKey}${key}`;
           let currentStringifiedDiffRecords;
-          if (operator === 'equal') {
+          if (operator === 'equal' || operator === 'composite') {
             currentStringifiedDiffRecords = iter(`${currentFullConfigKey}.`, value);
           } else if (operator === 'change') {
             const stringifiedValueBefore = stringifyValue(valueBefore);

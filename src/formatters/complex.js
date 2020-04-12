@@ -2,21 +2,18 @@ import _ from 'lodash';
 import getSortedEntities from '../sortentities';
 
 const getDiffSign = (operation) => {
-  let sign;
   switch (operation) {
     case 'add':
-      sign = '+';
-      break;
+      return '+';
     case 'remove':
-      sign = '-';
-      break;
+      return '-';
     case 'equal':
-      sign = '';
-      break;
+      return '';
+    case 'composite':
+      return '';
     default:
-      sign = null;
+      throw new Error(`No sign for operation '${operation}'!`);
   }
-  return sign;
 };
 
 const stringifyObjectValue = (deepness, indent, value) => {
