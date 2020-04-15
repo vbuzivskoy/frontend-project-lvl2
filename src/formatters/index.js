@@ -12,7 +12,7 @@ const getFormatter = (formatType) => {
     case 'json':
       return jsonFormatter;
     default:
-      throw new Error(`No formatter for '${formatType}' format type!`)
+      throw new Error(`No formatter for '${formatType}' format type!`);
   }
 };
 
