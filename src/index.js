@@ -6,7 +6,7 @@ import formatDiff from './formatters';
 
 const readFile = (filePath) => fs.readFileSync(filePath, 'utf8');
 const getFileExtension = (filePath) => path.extname(filePath);
-const getDataTypeFromExtension = (extension) => extension.trimStart('.').toLowerCase();
+const getDataTypeFromExtension = (extension) => extension.slice(1).toLowerCase();
 const getParsedFile = (filePath) => {
   const data = readFile(filePath);
   const fileExtension = getFileExtension(filePath);

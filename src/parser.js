@@ -20,11 +20,11 @@ const iniParser = (data) => {
 
 const getParser = (dataType) => {
   switch (dataType) {
-    case '.json':
+    case 'json':
       return JSON.parse;
-    case '.yaml':
+    case 'yaml':
       return yaml.safeLoad;
-    case '.ini':
+    case 'ini':
       return iniParser;
     default:
       throw new Error(`No parser for '${dataType}' file type!`);
