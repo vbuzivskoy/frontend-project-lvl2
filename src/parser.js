@@ -1,27 +1,25 @@
 import _ from 'lodash';
-import yaml from 'js-yaml'
+import yaml from 'js-yaml';
 import ini from 'ini';
 
-const iniParser = (iniFileContent) => {
-  const decodedIni = ini.parse(iniFileContent);
-  const iter = (configValue) => {
-    if (_.isObject(configValue)) {
-      const keys = Object.keys(configValue);
-      return keys.reduce((acc, key) => {
-        return {...acc, [key]: iter(configValue[key])}
-      }, {});
+const iniParser = (data) => {
+  const parsedData = ini.parse(data);
+  const iter = (value) => {
+    if (_.isObject(value)) {
+      const keys = Object.keys(value);
+      return keys.reduce((acc, key) => ({ ...acc, [key]: iter(value[key]) }), {});
     }
-    if (_.isString(configValue)) {
-      const number = Number(configValue);
-      return isNaN(number) ? configValue : number;
+    if (_.isString(value)) {
+      const number = Number(value);
+      return Number.isNaN(number) ? value : number;
     }
-    return configValue;
+    return value;
   };
-  return iter(decodedIni);
+  return iter(parsedData);
 };
 
-const getParser = (extension) => {
-  switch (extension) {
+const getParser = (dataType) => {
+  switch (dataType) {
     case '.json':
       return JSON.parse;
     case '.yaml':
@@ -29,13 +27,13 @@ const getParser = (extension) => {
     case '.ini':
       return iniParser;
     default:
-      throw new Error(`No parser for '${extension}' file type!`);
+      throw new Error(`No parser for '${dataType}' file type!`);
   }
 };
 
-const parseConfig = (config, extension) => {
-  const parse = getParser(extension);
-  return parse(config);
+const parseData = (data, dataType) => {
+  const parse = getParser(dataType);
+  return parse(data);
 };
 
-export default parseConfig;
+export default parseData;

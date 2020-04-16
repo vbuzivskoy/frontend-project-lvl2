@@ -1,42 +1,39 @@
 import _ from 'lodash';
 
-const stringifyValue = (value) => {
-  return _.isObject(value) ? '[complex value]' : `'${value}'`;
-};
+const stringifyValue = (value) => (
+  _.isObject(value) ? '[complex value]' : `'${value}'`
+);
 
 const plainFormatter = (diff) => {
-  const iter = (previousFullConfigKey, configValue) => {
-    if (_.isArray(configValue)) {
-      const stringifiedDiffRecords = configValue
-        .reduce((configDiffAccum, node) => {
-          const { key, operator, value, valueBefore, valueAfter } = node;
-          const currentFullConfigKey = `${previousFullConfigKey}${key}`;
-          let currentStringifiedDiffRecords;
-          if (operator === 'equal' || operator === 'composite') {
-            currentStringifiedDiffRecords = iter(`${currentFullConfigKey}.`, value);
-          } else if (operator === 'change') {
-            const stringifiedValueBefore = stringifyValue(valueBefore);
-            const stringifiedValueAfter = stringifyValue(valueAfter);
-            currentStringifiedDiffRecords =
-              [`Property '${currentFullConfigKey}' was changed from ${stringifiedValueBefore} to ${stringifiedValueAfter}`];
-          } else if (operator === 'remove') {
-            currentStringifiedDiffRecords =
-              [`Property '${currentFullConfigKey}' was deleted`];
-          } else {
-            const stringifiedValue = stringifyValue(value);
-            currentStringifiedDiffRecords =
-              [`Property '${currentFullConfigKey}' was added with value: ${stringifiedValue}`];
-          }
-          return [
-            ...configDiffAccum,
-            ...currentStringifiedDiffRecords
-          ];
-        }, []);
-      return stringifiedDiffRecords;
-    }
-    return [];
+  const iter = (previousFullConfigKey, nodes) => {
+    const stringifiedDiffRecords = nodes
+      .filter(({ type }) => type !== 'equal')
+      .map((node) => {
+        const {
+          key,
+          type,
+          value,
+          valueBefore,
+          valueAfter,
+        } = node;
+        const currentFullConfigKey = `${previousFullConfigKey}${key}`;
+        if (type === 'composite') {
+          return iter(`${currentFullConfigKey}.`, value);
+        }
+        if (type === 'changed') {
+          const stringifiedValueBefore = stringifyValue(valueBefore);
+          const stringifiedValueAfter = stringifyValue(valueAfter);
+          return `Property '${currentFullConfigKey}' was changed from ${stringifiedValueBefore} to ${stringifiedValueAfter}`;
+        }
+        if (type === 'removed') {
+          return `Property '${currentFullConfigKey}' was deleted`;
+        }
+        const stringifiedValue = stringifyValue(value);
+        return `Property '${currentFullConfigKey}' was added with value: ${stringifiedValue}`;
+      });
+    return stringifiedDiffRecords.join('\n');
   };
-  return iter('', diff).join('\n');
+  return iter('', diff);
 };
 
 export default plainFormatter;

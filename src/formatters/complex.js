@@ -1,83 +1,69 @@
 import _ from 'lodash';
-import getSortedEntities from '../sortentities';
 
 const getDiffSign = (operation) => {
   switch (operation) {
-    case 'add':
+    case 'added':
       return '+';
-    case 'remove':
+    case 'removed':
       return '-';
     case 'equal':
-      return '';
-    case 'composite':
       return '';
     default:
       throw new Error(`No sign for operation '${operation}'!`);
   }
 };
 
-const stringifyObjectValue = (deepness, indent, value) => {
-  const iter = (currentDeepness, currentValue) => {
-    if (_.isObject(currentValue)) {
-      const configRecords = getSortedEntities(currentValue);
-      const stringifiedConfigRecords = configRecords
-        .reduce((configRecordsAccum, [currentConfigKey, currentConfigValue]) => {
-          const stringifiedCurrentConfigValue = iter(currentDeepness + 2, currentConfigValue);
-          return [
-            ...configRecordsAccum,
-            `${indent.repeat(currentDeepness + 1)}  ${currentConfigKey}: ${_.head(stringifiedCurrentConfigValue)}`,
-            ...stringifiedCurrentConfigValue.slice(1)
-          ];
-        }, []);
-      return [
-        '{',
-        ...stringifiedConfigRecords,
-        `${indent.repeat(currentDeepness)}}`
-      ];
-    }
-    return [currentValue];
+const stringifyValue = (deepness, indent, value) => {
+  if (_.isObject(value)) {
+    const keys = Object.keys(value);
+    const stringifiedConfigRecords = keys.sort()
+      .map((key) => (
+        `${indent.repeat(deepness + 1)}  ${key}: ${stringifyValue(deepness + 2, indent, value[key])}`
+      ));
+    return [
+      '{',
+      ...stringifiedConfigRecords,
+      `${indent.repeat(deepness)}}`,
+    ].join('\n');
   }
-  return iter(deepness, value);
+  return value;
 };
 
 const complexFormatter = (diff) => {
   const indent = '  ';
-  const iter = (deepness, configValue) => {
-    if (_.isArray(configValue)) {
-      const stringifiedDiffRecords = configValue
-        .reduce((configDiffAccum, node) => {
-          const { key, operator, value, valueBefore, valueAfter } = node;
-          if (operator === 'change') {
-            const stringifiedValueBefore = iter(deepness + 2, valueBefore);
-            const stringifiedValueAfter = iter(deepness + 2, valueAfter);
-            return [
-              ...configDiffAccum,
-              `${indent.repeat(deepness + 1)}- ${key}: ${_.head(stringifiedValueBefore)}`,
-              ...stringifiedValueBefore.slice(1),
-              `${indent.repeat(deepness + 1)}+ ${key}: ${_.head(stringifiedValueAfter)}`,
-              ...stringifiedValueAfter.slice(1)
-            ];
-          }
-          const stringifiedValue = iter(deepness + 2, value);
-          const sign = getDiffSign(operator);
+  const iter = (deepness, nodes) => {
+    const stringifiedDiffRecords = nodes
+      .map((node) => {
+        const {
+          key,
+          type,
+          value,
+          valueBefore,
+          valueAfter,
+        } = node;
+        if (type === 'composite') {
+          const stringifiedNodeValue = iter(deepness + 2, value);
+          return `${indent.repeat(deepness + 1)}  ${key}: ${stringifiedNodeValue}`;
+        }
+        if (type === 'changed') {
+          const stringifiedValueBefore = stringifyValue(deepness + 2, indent, valueBefore);
+          const stringifiedValueAfter = stringifyValue(deepness + 2, indent, valueAfter);
           return [
-            ...configDiffAccum,
-            `${indent.repeat(deepness + 1)}${sign.padEnd(2)}${key}: ${_.head(stringifiedValue)}`,
-            ...stringifiedValue.slice(1)
-          ];
-        }, []);
-      return [
-        '{',
-        ...stringifiedDiffRecords,
-        `${indent.repeat(deepness)}}`
-      ]
-    }
-    if (_.isObject) {
-      return stringifyObjectValue(deepness, indent, configValue);
-    }
-    return [configValue];
+            `${indent.repeat(deepness + 1)}- ${key}: ${stringifiedValueBefore}`,
+            `${indent.repeat(deepness + 1)}+ ${key}: ${stringifiedValueAfter}`,
+          ].join('\n');
+        }
+        const stringifiedValue = stringifyValue(deepness + 2, indent, value);
+        const sign = getDiffSign(type);
+        return `${indent.repeat(deepness + 1)}${sign.padEnd(2)}${key}: ${stringifiedValue}`;
+      });
+    return [
+      '{',
+      ...stringifiedDiffRecords,
+      `${indent.repeat(deepness)}}`,
+    ].join('\n');
   };
-  return iter(0, diff).join('\n');
+  return iter(0, diff);
 };
 
 export default complexFormatter;

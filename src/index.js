@@ -1,39 +1,41 @@
 import fs from 'fs';
 import path from 'path';
 import _ from 'lodash';
-import parseConfig from './parser';
+import parseData from './parser';
 import formatDiff from './formatters';
 
 const readFile = (filePath) => fs.readFileSync(filePath, 'utf8');
 const getFileExtension = (filePath) => path.extname(filePath);
+const getDataTypeFromExtension = (extension) => extension.trimStart('.').toLowerCase();
 const getParsedFile = (filePath) => {
-  const fileContent = readFile(filePath);
+  const data = readFile(filePath);
   const fileExtension = getFileExtension(filePath);
-  return parseConfig(fileContent, fileExtension);
+  const dataType = getDataTypeFromExtension(fileExtension);
+  return parseData(data, dataType);
 };
 
-const createDiffTree = (configBefore, configAfter) => {
+const createDiff = (configBefore, configAfter) => {
   const iter = (valueBefore, valueAfter) => {
     const keys = _.union(Object.keys(valueBefore), Object.keys(valueAfter)).sort();
     const nodes = keys.map((key) => {
+      if (!_.has(valueAfter, key)) {
+        return { key, type: 'removed', value: valueBefore[key] };
+      }
+      if (!_.has(valueBefore, key)) {
+        return { key, type: 'added', value: valueAfter[key] };
+      }
       if (_.isObject(valueBefore[key]) && _.isObject(valueAfter[key])) {
-        return { key, operator: 'composite', value: iter(valueBefore[key], valueAfter[key]) };
+        return { key, type: 'composite', value: iter(valueBefore[key], valueAfter[key]) };
       }
-      if (valueBefore[key] === valueAfter[key] ) {
-        return {key, operator: 'equal', value: valueBefore[key] };
+      if (valueBefore[key] === valueAfter[key]) {
+        return { key, type: 'equal', value: valueBefore[key] };
       }
-      if (_.has(valueBefore, key) && _.has(valueAfter, key)) {
-        return {
-          key,
-          operator: 'change',
-          valueBefore: valueBefore[key],
-          valueAfter: valueAfter[key]
-        };
-      }
-      if (_.has(valueBefore, key)) {
-        return { key, operator: 'remove', value: valueBefore[key] };
-      }
-      return { key, operator: 'add', value: valueAfter[key] };
+      return {
+        key,
+        type: 'changed',
+        valueBefore: valueBefore[key],
+        valueAfter: valueAfter[key],
+      };
     });
     return nodes;
   };
@@ -43,8 +45,8 @@ const createDiffTree = (configBefore, configAfter) => {
 const genDiff = (beforeFilePath, afterFilePath, formatType) => {
   const configBefore = getParsedFile(beforeFilePath);
   const configAfter = getParsedFile(afterFilePath);
-  const diffTree = createDiffTree(configBefore, configAfter);
-  return formatDiff(diffTree, formatType);
+  const diffData = createDiff(configBefore, configAfter);
+  return formatDiff(diffData, formatType);
 };
 
 export default genDiff;
