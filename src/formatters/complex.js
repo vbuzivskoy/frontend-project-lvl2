@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
-const getDiffSign = (operation) => {
-  switch (operation) {
+const getDiffSign = (nodeType) => {
+  switch (nodeType) {
     case 'added':
       return '+';
     case 'removed':
@@ -9,7 +9,7 @@ const getDiffSign = (operation) => {
     case 'equal':
       return '';
     default:
-      throw new Error(`No sign for operation '${operation}'!`);
+      throw new Error(`No sign for node type '${nodeType}'!`);
   }
 };
 
