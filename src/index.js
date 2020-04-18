@@ -25,7 +25,7 @@ const createDiff = (configBefore, configAfter) => {
         return { key, type: 'added', value: valueAfter[key] };
       }
       if (_.isObject(valueBefore[key]) && _.isObject(valueAfter[key])) {
-        return { key, type: 'composite', value: iter(valueBefore[key], valueAfter[key]) };
+        return { key, type: 'composite', child: iter(valueBefore[key], valueAfter[key]) };
       }
       if (valueBefore[key] === valueAfter[key]) {
         return { key, type: 'equal', value: valueBefore[key] };
