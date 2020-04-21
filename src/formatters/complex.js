@@ -40,11 +40,11 @@ const complexFormatter = (diff) => {
           value,
           valueBefore,
           valueAfter,
-          child,
+          children,
         } = node;
         switch (type) {
           case 'composite': {
-            const stringifiedNodeValue = iter(depth + 2, child);
+            const stringifiedNodeValue = iter(depth + 2, children);
             return `${indent.repeat(depth + 1)}  ${key}: ${stringifiedNodeValue}`;
           }
           case 'changed': {

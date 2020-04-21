@@ -15,12 +15,12 @@ const plainFormatter = (diff) => {
           value,
           valueBefore,
           valueAfter,
-          child,
+          children,
         } = node;
         const currentFullConfigKey = `${previousFullConfigKey}${key}`;
         switch (type) {
           case 'composite':
-            return iter(`${currentFullConfigKey}.`, child);
+            return iter(`${currentFullConfigKey}.`, children);
           case 'changed': {
             const stringifiedValueBefore = stringifyValue(valueBefore);
             const stringifiedValueAfter = stringifyValue(valueAfter);
